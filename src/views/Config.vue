@@ -1,11 +1,18 @@
 <template>
   <div class="config">
-    <h2>Config</h2>
+    <Cover>
+      <h2>Config</h2>
+    </Cover>
   </div>
 </template>
 
 <script>
+import Cover from "@/components/Cover.vue";
+
 export default {
-  name: "config"
+  name: "config",
+  components: {
+    Cover
+  }
 };
 </script>

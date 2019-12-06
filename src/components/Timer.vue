@@ -1,31 +1,59 @@
 <template>
   <div>
-    <transition name="fade">
+    <transition-group name="fade">
       <div id="play" key="play" v-if="!micEnabled">
-        <div @click="play">
-          <span>▶</span>
+        <div>
+          <a @click="play" class="linkButton" title="S T A R T">
+            <span class="material-icons">play_arrow</span>
+          </a>
         </div>
       </div>
-      <div id="time" key="time" v-if="micEnabled" v-html="time"></div>
-    </transition>
 
-    <canvas
-      :width="resolution"
-      height="1080"
-      ref="display"
-      id="display"
-    ></canvas>
+      <div id="pause" key="pause" v-if="micEnabled">
+        <div>
+          <a @click="play" class="linkButton" title="P A U S E">
+            <span class="material-icons">pause</span>
+          </a>
+        </div>
+      </div>
+
+      <div id="stop" key="stop" v-if="micEnabled">
+        <div @click="play">
+          <a @click="play" class="linkButton" title="S T O P">
+            <span class="material-icons">stop</span>
+          </a>
+        </div>
+      </div>
+
+      <div id="time" key="time" v-if="micEnabled" v-html="time"></div>
+    </transition-group>
+
+    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
+
+    <vue-slider
+      title="S E N S I T I V I T Y"
+      class="slider"
+      v-model="sensitivity"
+      :min="250"
+      :max="500"
+      :dotSize="20"
+      :interval="25"
+      :marks="false"
+    ></vue-slider>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import VueSlider from "vue-slider-component";
+
 let createMedianFilter: any = require("moving-median");
 
-@Component
+@Component({
+  name: "Timer",
+  components: { VueSlider }
+})
 export default class Timer extends Vue {
-  @Prop(Number) readonly sensitivity: number = 250;
-
   audioContext: any = null;
   canvasContext: any = null;
   meter: any = null;
@@ -34,11 +62,13 @@ export default class Timer extends Vue {
   height: number = 1080;
   medianFilter: any = null;
   noiseFilter: boolean = true;
-  seconds: number = 5 * 60;
+  seconds: number = 0;
   interval: any = null;
   resolution: number = 1920;
   speed: number = this.resolution / 10;
   blur: number = 1;
+  sensitivity: number = 500;
+  timeLimit: number = 60;
 
   get time() {
     return `${Math.floor(this.seconds / 60)}<span class="sep">:</span>${(
@@ -49,10 +79,12 @@ export default class Timer extends Vue {
   }
 
   play() {
-    this.seconds = 10 * 60;
+    this.seconds = this.timeLimit;
+
     this.audioContext = new AudioContext();
     let canvas: any = this.$refs.display;
     this.canvasContext = (canvas as HTMLCanvasElement).getContext("2d");
+
     this.medianFilter = createMedianFilter(63);
     // this.width = (canvas as HTMLCanvasElement).scrollWidth;
     // this.height = (canvas as HTMLCanvasElement).scrollHeight;
@@ -264,6 +296,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
     }
 
     this.canvasContext.fillRect(0, this.height - h, this.width, this.height);
+
     window.requestAnimationFrame(this.drawLoop);
   }
 }
@@ -272,11 +305,14 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
 @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap')
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons')
 
 play-size = 50vmin
+pause-stop-size = 20vmin
 
 #play
-  font-family sans-serif
+#stop
+#pause
   position absolute
   display flex
   width 100%
@@ -284,35 +320,61 @@ play-size = 50vmin
   top 0
   left 0
   overflow hidden
-  justify-content center
   align-items center
   cursor pointer
 
+#play
+  justify-content center
+
+#pause
+  justify-content flex-start
+
+#stop
+  justify-content flex-end
+
 #play div
+#pause div
+#stop div
   border-radius 50%
   line-height 0
-  font-size play-size * 0.5
-  width play-size
-  height play-size
   display flex
   justify-content center
   align-items center
-  border 3vmin solid rgba(0, 0, 0, 0.1)
   box-sizing border-box
+
+#play div
+  width play-size
+  height play-size
+  background-color rgba(0, 0, 0, 0.025)
 
   &:hover
     background-color rgba(0, 0, 0, 0.1)
     border 3vmin solid rgba(0, 0, 0, 0)
 
+#pause div
+#stop div
+  width pause-stop-size
+  height pause-stop-size
+  margin 0 1rem 1rem 1rem
+  z-index 3
+  transition opacity 0.15s ease-in-out
+  opacity 0.05
+
+  &:hover
+    opacity 1
+    background-color rgba(0, 0, 0, 0.1)
+
 #play div span
-  display inline-block
-  padding-left 4vmin
-  padding-top 1vmin
+  font-size play-size * 0.5 !important
+
+#pause div span
+#stop div span
+  font-size pause-stop-size * 0.5 !important
 
 #time
   font-family 'Share Tech Mono'
   letter-spacing -0.1em
-  font-size 50vmin
+  font-size 43vmin
   position absolute
   display flex
   width 100%
@@ -325,6 +387,7 @@ play-size = 50vmin
   line-height 0
   text-align center
   text-shadow 2.5vmin 0 0 rgba(0, 0, 0, 0.1)
+  max-width 100vw
 
 #display
   width 100%
@@ -332,6 +395,14 @@ play-size = 50vmin
   position absolute
   left 0
   top 0
+  z-index -2
+
+#subDisplay
+  width 100%
+  height 33%
+  position absolute
+  left 0
+  bottom 0
   z-index -1
 
 .fade-enter-active
@@ -343,6 +414,21 @@ play-size = 50vmin
 
 .fade-leave-to
   opacity 0
+
+.slider
+  margin 2rem
+  position fixed
+  width calc(100% - 4rem) !important
+  bottom 0
+  cursor pointer
+  transition opacity 0.5s linear
+  opacity 0.075
+
+  &:hover
+    opacity 0.9
+
+.vue-slider-process
+  background-color rgba(0, 0, 0, 0.5) !important
 </style>
 
 <style lang="stylus">
@@ -351,4 +437,10 @@ play-size = 50vmin
   position relative
   top -4%
   left 0.1%
+</style>
+
+<style lang="sass">
+$themeColor: rgba(64, 64, 64, .35)
+$bgColor: rgba(128, 128, 128, .05)
+@import '~vue-slider-component/lib/theme/antd.scss'
 </style>
