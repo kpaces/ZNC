@@ -436,7 +436,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
-@import url('//fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap')
+@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap')
 
 play-size = 42vmin
 pause-stop-size = 20vmin
