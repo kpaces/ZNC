@@ -14,8 +14,9 @@
             v-model="timeLimit"
             @native:blur="fixTime"
             @keypress.enter="play"
+            @change="play"
           />
-          <a @click="play" class="linkButton" title="P l a y">
+          <a @click.prevent.stop="play" class="linkButton" title="P l a y">
             <span class="material-icons">play_arrow</span>
           </a>
         </div>
@@ -23,7 +24,7 @@
 
       <div id="pause" key="pause" v-if="micEnabled">
         <div>
-          <a @click="pause" class="linkButton" title="P a u s e">
+          <a @click.prevent.stop="pause" class="linkButton" title="P a u s e">
             <span v-if="status === 1" class="material-icons">pause</span>
             <span v-else class="material-icons">play_arrow</span>
           </a>
@@ -32,16 +33,27 @@
 
       <div id="stop" key="stop" v-if="micEnabled">
         <div>
-          <a @click="stop" class="linkButton" title="S t o p">
+          <a @click.prevent.stop="stop" class="linkButton" title="S t o p">
             <span class="material-icons">stop</span>
           </a>
         </div>
       </div>
 
-      <div id="time" :class="{ blinking: status > 1 }" key="time" v-if="micEnabled" v-html="time"></div>
+      <div
+        id="time"
+        :class="{ blinking: status > 1 }"
+        key="time"
+        v-if="micEnabled"
+        v-html="time"
+      ></div>
     </transition-group>
 
-    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
+    <canvas
+      :width="resolution"
+      height="1080"
+      ref="display"
+      id="display"
+    ></canvas>
 
     <vue-slider
       title="S e n s i t i v i t y"
@@ -148,32 +160,38 @@ export default class Timer extends Vue {
   play() {
     this.seconds = this.timeLimit * 60;
 
-    this.audioContext = new AudioContext();
-    let canvas: any = this.$refs.display;
-    this.canvasContext = (canvas as HTMLCanvasElement).getContext("2d");
-
-    this.medianFilter = createMedianFilter(63);
-    // this.width = (canvas as HTMLCanvasElement).scrollWidth;
-    // this.height = (canvas as HTMLCanvasElement).scrollHeight;
-
-    // eslint-disable-next-line
-    let n: any = navigator;
-
+    const n: any = navigator;
     n.getUserMedia =
       n.getUserMedia ||
       n.webkitGetUserMedia ||
       n.mozGetUserMedia ||
-      n.msGetUserMedia ||
-      n.mediaDevices.getUserMedia;
+      n.msGetUserMedia;
 
-    n.getUserMedia(
-      {
-        video: false,
-        audio: true
-      },
-      this.success,
-      this.error
-    );
+    if (!n.getUserMedia) {
+      var constraints = {
+        audio: true,
+        video: false
+      };
+
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then(this.success)
+        .catch(function(error) {
+          // eslint-disable-next-line
+          console.error("getUserMedia() error: ", error);
+          alert(error);
+        });
+    } else {
+      alert("Using old getUserMedia");
+      n.getUserMedia(
+        {
+          audio: true,
+          video: false
+        },
+        this.success,
+        this.error
+      );
+    }
 
     this.interval = setInterval(this.tick, 1000);
     this.status = 1;
@@ -181,8 +199,6 @@ export default class Timer extends Vue {
   }
 
   pause() {
-    // eslint-disable-next-line
-    console.log(this.isRed, this.status);
     if (this.isRed) {
       clearInterval(this.interval);
       this.status = 3;
@@ -225,8 +241,6 @@ export default class Timer extends Vue {
   }
 
   redIn() {
-    // eslint-disable-next-line
-    console.log("RED IN");
     this.isRed = true;
     this.pause();
   }
@@ -238,13 +252,25 @@ export default class Timer extends Vue {
     }
     if (this.isRed) {
       this.isRed = false;
-      // eslint-disable-next-line
-      console.log("RED OUT");
       this.pause();
     }
   }
 
   success(stream: any) {
+    alert(5);
+
+    const w: any = window;
+
+    w.AudioContext = w.AudioContext || w.webkitAudioContext;
+    if (w.AudioContext) {
+      w.audioContext = new w.AudioContext();
+    }
+
+    this.audioContext = new w.AudioContext();
+    let canvas: any = this.$refs.display;
+    this.canvasContext = (canvas as HTMLCanvasElement).getContext("2d");
+    this.medianFilter = createMedianFilter(63);
+
     let mediaStreamSource: any = this.audioContext.createMediaStreamSource(
       stream
     );
@@ -491,21 +517,22 @@ pause-stop-size = 20vmin
   font-family 'Share Tech Mono'
   letter-spacing -0.1em
   font-size 12vmin
-  line-height 0
+  line-height 0vmin
   text-align center
   text-shadow 0.6vmin 0 0 rgba(0, 0, 0, 0.1)
   border 3px dotted rgba(0, 0, 0, 0.05) !important
-  padding 0 1vmin 0 0
+  padding 0.5vmin 1vmin 0 0
   width 15vmin !important
   border-radius 5vmin
   background none !important
-  color #606060
+  color #90ff30
+  -webkit-box-shadow none !important
+  box-shadow none !important
+  outline 0 none !important
+  -webkit-appearance none !important
 
   &:focus
     border-color inherit
-    -webkit-box-shadow none
-    box-shadow none
-    outline 0 none
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button
