@@ -163,7 +163,8 @@ export default class Timer extends Vue {
       n.getUserMedia ||
       n.webkitGetUserMedia ||
       n.mozGetUserMedia ||
-      n.msGetUserMedia;
+      n.msGetUserMedia ||
+      n.mediaDevices;
 
     n.getUserMedia(
       {
