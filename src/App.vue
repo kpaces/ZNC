@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <Timer />
-    <div id="logo">
-      ZNC
-    </div>
+    <div id="logo">ZNC</div>
 
     <div id="nav">
       <router-link to="/">Home</router-link>
@@ -32,7 +30,7 @@ export default {
 
 <style lang="stylus">
 @import url('//db.onlinewebfonts.com/c/0a6ee448d1bd65c56f6cf256a7c6f20a?family=Bahnschrift')
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons')
+@import url('//fonts.googleapis.com/icon?family=Material+Icons')
 
 nav-margin = 0.5rem
 nav-color = rgb(96, 96, 96)

@@ -38,21 +38,10 @@
         </div>
       </div>
 
-      <div
-        id="time"
-        :class="{ blinking: status === 2 }"
-        key="time"
-        v-if="micEnabled"
-        v-html="time"
-      ></div>
+      <div id="time" :class="{ blinking: status > 1 }" key="time" v-if="micEnabled" v-html="time"></div>
     </transition-group>
 
-    <canvas
-      :width="resolution"
-      height="1080"
-      ref="display"
-      id="display"
-    ></canvas>
+    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
 
     <vue-slider
       title="S e n s i t i v i t y"
@@ -95,6 +84,10 @@ export default class Timer extends Vue {
   sensitivity: number = 500;
   timeLimit: number = 5;
   status: number = 0;
+  redTimer: any = null;
+  isRed: boolean = false;
+  preRed: boolean = false;
+  redWait: number = 2000;
 
   get time() {
     return `${Math.floor(this.seconds / 60)}<span class="sep">:</span>${(
@@ -187,14 +180,26 @@ export default class Timer extends Vue {
   }
 
   pause() {
-    if (this.status === 1) {
+    // eslint-disable-next-line
+    console.log(this.isRed, this.status);
+    if (this.isRed) {
       clearInterval(this.interval);
-      this.status = 2;
+      this.status = 3;
       document.title = `ZNC ${this.indicator} ${this.unformatedTime} - paused`;
     } else {
-      this.interval = setInterval(this.tick, 1000);
-      this.status = 1;
-      document.title = `ZNC ${this.indicator} ${this.unformatedTime}`;
+      switch (this.status) {
+        case 1:
+          clearInterval(this.interval);
+          this.status = 2;
+          document.title = `ZNC ${this.indicator} ${this.unformatedTime} - paused`;
+          break;
+        case 2:
+        case 3:
+          this.interval = setInterval(this.tick, 1000);
+          this.status = 1;
+          document.title = `ZNC ${this.indicator} ${this.unformatedTime}`;
+          break;
+      }
     }
   }
 
@@ -216,6 +221,26 @@ export default class Timer extends Vue {
       return;
     }
     document.title = `ZNC ${this.indicator} ${this.unformatedTime}`;
+  }
+
+  redIn() {
+    // eslint-disable-next-line
+    console.log("RED IN");
+    this.isRed = true;
+    this.pause();
+  }
+
+  redOut() {
+    if (this.preRed) {
+      clearTimeout(this.redTimer);
+      this.preRed = false;
+    }
+    if (this.isRed) {
+      this.isRed = false;
+      // eslint-disable-next-line
+      console.log("RED OUT");
+      this.pause();
+    }
   }
 
   success(stream: any) {
@@ -389,10 +414,17 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
 
     if (h < t) {
       this.canvasContext.fillStyle = `rgba(128,255,128,.5)`;
+      this.redOut();
     } else if (h >= t && h < 2 * t) {
       this.canvasContext.fillStyle = `rgba(255,192,80,.5)`;
+      this.redOut();
     } else {
+      // RED state
       this.canvasContext.fillStyle = `rgba(255,100,100,.5)`;
+      if (!this.isRed && !this.preRed && this.status === 1) {
+        this.redTimer = setTimeout(this.redIn, this.redWait);
+        this.preRed = true;
+      }
     }
 
     this.canvasContext.fillRect(0, this.height - h, this.width, this.height);
@@ -404,7 +436,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
-@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap')
+@import url('//fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap')
 
 play-size = 42vmin
 pause-stop-size = 20vmin
@@ -549,7 +581,7 @@ input[type=number]
   opacity 0
 
 .blinking
-  transition none!important
+  transition none !important
   animation blinking 1s ease infinite
 
 @keyframes blinking
