@@ -176,13 +176,8 @@ export default class Timer extends Vue {
       navigator.mediaDevices
         .getUserMedia(constraints)
         .then(this.success)
-        .catch(function(error) {
-          // eslint-disable-next-line
-          console.error("getUserMedia() error: ", error);
-          alert(error);
-        });
+        .catch(this.error);
     } else {
-      alert("Using old getUserMedia");
       n.getUserMedia(
         {
           audio: true,
@@ -525,7 +520,7 @@ pause-stop-size = 20vmin
   width 15vmin !important
   border-radius 5vmin
   background none !important
-  color #90ff30
+  color #906060
   -webkit-box-shadow none !important
   box-shadow none !important
   outline 0 none !important
