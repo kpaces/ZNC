@@ -1,5 +1,12 @@
 <template>
   <div id="cover">
+    <router-link
+      title="C l o s e"
+      id="close"
+      class="linkButton material-icons"
+      to="/"
+      >close
+    </router-link>
     <slot></slot>
   </div>
 </template>
@@ -25,4 +32,13 @@ export default class Cover extends Vue {}
   backdrop-filter blur(11px)
   padding 3rem
   overflow auto
+
+#close
+  font-size 2rem
+  color #606060
+  opacity 0.1
+  transition opacity 0.5s ease-in-out
+
+  &:hover
+    opacity 0.5
 </style>

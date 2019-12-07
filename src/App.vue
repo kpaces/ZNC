@@ -2,7 +2,7 @@
   <div id="app">
     <Timer />
     <div id="logo">
-      <img src="/img/logo.svg" />
+      ZNC
     </div>
 
     <div id="nav">
@@ -32,6 +32,7 @@ export default {
 
 <style lang="stylus">
 @import url('//db.onlinewebfonts.com/c/0a6ee448d1bd65c56f6cf256a7c6f20a?family=Bahnschrift')
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons')
 
 nav-margin = 0.5rem
 nav-color = rgb(96, 96, 96)
@@ -44,19 +45,31 @@ html
 
 body
   overflow hidden !important
+  -webkit-touch-callout none /* iOS Safari */
+  -webkit-user-select none /* Safari */
+  -khtml-user-select none /* Konqueror HTML */
+  -moz-user-select none /* Old versions of Firefox */
+  -ms-user-select none /* Internet Explorer/Edge */
+  user-select none   /* Non-prefixed version, currently
+  supported by Chrome, Opera and Firefox */
 
 h2
   font-size 150% !important
   margin 0 40% 1em 40% !important
   border-bottom 3px solid rgba(0, 0, 0, 0.05)
 
+p
+  line-height 2em
+
 a:not(.linkButton)
   color link-color !important
+
   &:hover
     border-bottom 2px solid link-color
 
 a.linkButton
   color nav-color
+
   &:hover
     color nav-color
 
@@ -99,12 +112,15 @@ a.linkButton
   padding-left 0
 
 #logo
-  margin 1em 0 0 1em
-  height 70px
-  transition margin 0.25s ease-in-out
+  position fixed
+  left 2 * nav-margin
+  top nav-margin
+  transition margin 0.5s ease-in-out
   transition opacity 0.5s ease-in-out
   z-index 20
-  position fixed
+  font-size 2.5em
+  text-align left
+  line-height 1.25em
 
   &:hover
     opacity 1

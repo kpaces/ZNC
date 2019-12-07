@@ -1,6 +1,6 @@
 {
   "name": "znc",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "buefy": "^0.8.8",
+    "canvas": "^2.6.0",
     "core-js": "^3.3.2",
+    "fibers": "^4.0.2",
+    "hotkeys-js": "^3.7.3",
     "moving-median": "^1.0.0",
+    "node-sass": "^4.13.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",

@@ -3,7 +3,19 @@
     <transition-group name="fade">
       <div id="play" key="play" v-if="!micEnabled">
         <div>
-          <a @click="play" class="linkButton" title="S T A R T">
+          <input
+            title="M i n u t e s  (1 - 9 0)"
+            min="1"
+            max="90"
+            maxlength="2"
+            id="timeset"
+            type="number"
+            ref="timeset"
+            v-model="timeLimit"
+            @native:blur="fixTime"
+            @keypress.enter="play"
+          />
+          <a @click="play" class="linkButton" title="P l a y">
             <span class="material-icons">play_arrow</span>
           </a>
         </div>
@@ -11,32 +23,44 @@
 
       <div id="pause" key="pause" v-if="micEnabled">
         <div>
-          <a @click="play" class="linkButton" title="P A U S E">
-            <span class="material-icons">pause</span>
+          <a @click="pause" class="linkButton" title="P a u s e">
+            <span v-if="status === 1" class="material-icons">pause</span>
+            <span v-else class="material-icons">play_arrow</span>
           </a>
         </div>
       </div>
 
       <div id="stop" key="stop" v-if="micEnabled">
-        <div @click="play">
-          <a @click="play" class="linkButton" title="S T O P">
+        <div>
+          <a @click="stop" class="linkButton" title="S t o p">
             <span class="material-icons">stop</span>
           </a>
         </div>
       </div>
 
-      <div id="time" key="time" v-if="micEnabled" v-html="time"></div>
+      <div
+        id="time"
+        :class="{ blinking: status === 2 }"
+        key="time"
+        v-if="micEnabled"
+        v-html="time"
+      ></div>
     </transition-group>
 
-    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
+    <canvas
+      :width="resolution"
+      height="1080"
+      ref="display"
+      id="display"
+    ></canvas>
 
     <vue-slider
-      title="S E N S I T I V I T Y"
+      title="S e n s i t i v i t y"
       class="slider"
       v-model="sensitivity"
       :min="250"
       :max="500"
-      :dotSize="20"
+      :dotSize="30"
       :interval="25"
       :marks="false"
     ></vue-slider>
@@ -44,8 +68,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Watch, Prop, Vue } from "vue-property-decorator";
 import VueSlider from "vue-slider-component";
+import hotkeys from "hotkeys-js";
 
 let createMedianFilter: any = require("moving-median");
 
@@ -68,7 +93,8 @@ export default class Timer extends Vue {
   speed: number = this.resolution / 10;
   blur: number = 1;
   sensitivity: number = 500;
-  timeLimit: number = 60;
+  timeLimit: number = 5;
+  status: number = 0;
 
   get time() {
     return `${Math.floor(this.seconds / 60)}<span class="sep">:</span>${(
@@ -78,8 +104,56 @@ export default class Timer extends Vue {
       .padStart(2, "0")}`;
   }
 
+  get unformatedTime() {
+    return `${Math.floor(this.seconds / 60)}:${(this.seconds % 60)
+      .toString()
+      .padStart(2, "0")}`;
+  }
+
+  get indicator() {
+    const seconds = this.timeLimit * 60;
+    const ind: string[] = ["○", "◔", "◑", "◕", "⬤"];
+    const i = Math.floor((4 * (seconds - this.seconds)) / seconds);
+
+    return ind[i];
+  }
+
+  created() {
+    hotkeys("esc", ev => {
+      ev.preventDefault();
+      if (this.status > 0) {
+        this.stop();
+      }
+    });
+
+    hotkeys("space", ev => {
+      ev.preventDefault();
+      if (this.status > 0) {
+        this.pause();
+      }
+    });
+  }
+
+  mounted() {
+    const timeset = this.$refs.timeset as HTMLInputElement;
+    timeset.focus();
+  }
+
+  @Watch("timeLimit")
+  onTimeLimitChanged(val: string) {
+    const v = parseInt(val, 10);
+
+    if (val.length > 0) {
+      this.timeLimit = Math.max(1, Math.min(90, v));
+    }
+  }
+
+  fixTime() {
+    this.timeLimit = Math.max(1, Math.min(90, this.timeLimit));
+  }
+
   play() {
-    this.seconds = this.timeLimit;
+    this.seconds = this.timeLimit * 60;
 
     this.audioContext = new AudioContext();
     let canvas: any = this.$refs.display;
@@ -108,14 +182,40 @@ export default class Timer extends Vue {
     );
 
     this.interval = setInterval(this.tick, 1000);
+    this.status = 1;
+    document.title = `ZNC ${this.indicator} ${this.unformatedTime}`;
+  }
+
+  pause() {
+    if (this.status === 1) {
+      clearInterval(this.interval);
+      this.status = 2;
+      document.title = `ZNC ${this.indicator} ${this.unformatedTime} - paused`;
+    } else {
+      this.interval = setInterval(this.tick, 1000);
+      this.status = 1;
+      document.title = `ZNC ${this.indicator} ${this.unformatedTime}`;
+    }
+  }
+
+  stop() {
+    clearInterval(this.interval);
+    this.status = 0;
+    this.seconds = 0;
+    this.micEnabled = false;
+    setTimeout(() => {
+      (this.$refs.timeset as HTMLInputElement).focus();
+    }, 150);
+    document.title = "ZNC";
   }
 
   tick() {
     this.seconds -= 1;
     if (this.seconds < 0) {
-      clearInterval(this.interval);
-      this.micEnabled = false;
+      this.stop();
+      return;
     }
+    document.title = `ZNC ${this.indicator} ${this.unformatedTime}`;
   }
 
   success(stream: any) {
@@ -305,9 +405,8 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
 @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap')
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons')
 
-play-size = 50vmin
+play-size = 42vmin
 pause-stop-size = 20vmin
 
 #play
@@ -322,6 +421,9 @@ pause-stop-size = 20vmin
   overflow hidden
   align-items center
   cursor pointer
+
+#timeset
+  display block
 
 #play
   justify-content center
@@ -346,10 +448,41 @@ pause-stop-size = 20vmin
   width play-size
   height play-size
   background-color rgba(0, 0, 0, 0.025)
+  flex-direction column
 
   &:hover
     background-color rgba(0, 0, 0, 0.1)
     border 3vmin solid rgba(0, 0, 0, 0)
+
+#play input
+  font-family 'Share Tech Mono'
+  letter-spacing -0.1em
+  font-size 12vmin
+  line-height 0
+  text-align center
+  text-shadow 0.6vmin 0 0 rgba(0, 0, 0, 0.1)
+  border 3px dotted rgba(0, 0, 0, 0.05) !important
+  padding 0 1vmin 0 0
+  width 15vmin !important
+  border-radius 5vmin
+  background none !important
+  color #606060
+
+  &:focus
+    border-color inherit
+    -webkit-box-shadow none
+    box-shadow none
+    outline 0 none
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button
+input::-webkit-inner-spin-button
+  -webkit-appearance none
+  margin 0
+
+/* Firefox */
+input[type=number]
+  -moz-appearance textfield
 
 #pause div
 #stop div
@@ -415,10 +548,22 @@ pause-stop-size = 20vmin
 .fade-leave-to
   opacity 0
 
+.blinking
+  transition none!important
+  animation blinking 1s ease infinite
+
+@keyframes blinking
+  50%
+    opacity 0
+
+slider-margin-x = 3em
+slider-margin-y = 2em
+slider-width = 2 * slider-margin-x
+
 .slider
-  margin 2rem
+  margin slider-margin-y slider-margin-x
   position fixed
-  width calc(100% - 4rem) !important
+  width 'calc(100% - %s)' % slider-width !important
   bottom 0
   cursor pointer
   transition opacity 0.5s linear
@@ -426,9 +571,6 @@ pause-stop-size = 20vmin
 
   &:hover
     opacity 0.9
-
-.vue-slider-process
-  background-color rgba(0, 0, 0, 0.5) !important
 </style>
 
 <style lang="stylus">
