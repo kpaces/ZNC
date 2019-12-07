@@ -19,6 +19,8 @@
         >
         by <a href="https://cwilso.com/" target="_blank">Chris Wilson</a>.
       </p>
+      <hr />
+      <p><a href="https://www.onlinewebfonts.com">oNline Web Fonts</a></p>
     </Cover>
   </div>
 </template>
