@@ -36,14 +36,12 @@ export default {
       OR
       <a href="http://www.onlinewebfonts.com">oNline Web Fonts</a>
 */
-@font-face {font-family: "Bahnschrift";
-    src: url("https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.eot"); /* IE9*/
-    src: url("https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
-    url("https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.woff2") format("woff2"), /* chrome firefox */
-    url("https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.woff") format("woff"), /* chrome firefox */
-    url("https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.ttf") format("truetype"), /* chrome firefox opera Safari, Android, iOS 4.2+*/
-    url("https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.svg#Bahnschrift") format("svg"); /* iOS 4.1- */
-}
+@font-face
+  font-family 'Bahnschrift'
+  src url('https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.eot') /* IE9 */
+  src url('https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.eot?#iefix') format('embedded-opentype'), url('https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.woff2') format('woff2'), url('https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.woff') format('woff'), url('https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.ttf') format('truetype'), url('https://db.onlinewebfonts.com/t/0a6ee448d1bd65c56f6cf256a7c6f20a.svg#Bahnschrift') format('svg')
+  /* iOS 4.1- */
+
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons')
 
 nav-margin = 0.5rem
@@ -67,11 +65,18 @@ body
 
 h2
   font-size 150% !important
-  margin 0 40% 1em 40% !important
-  border-bottom 3px solid rgba(0, 0, 0, 0.05)
+  margin-top 1em
+
+h3
+  font-size 125% !important
+  margin-top 2em !important
 
 p
+ul
   line-height 2em
+
+ul
+  margin-top 1em !important
 
 a:not(.linkButton)
   color link-color !important

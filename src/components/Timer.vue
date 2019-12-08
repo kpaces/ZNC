@@ -38,21 +38,10 @@
         </div>
       </div>
 
-      <div
-        id="time"
-        :class="{ blinking: status > 1 }"
-        key="time"
-        v-if="micEnabled"
-        v-html="time"
-      ></div>
+      <div id="time" :class="{ blinking: status > 1 }" key="time" v-if="micEnabled" v-html="time"></div>
     </transition-group>
 
-    <canvas
-      :width="resolution"
-      height="1080"
-      ref="display"
-      id="display"
-    ></canvas>
+    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
 
     <vue-slider
       title="S e n s i t i v i t y"
@@ -228,6 +217,8 @@ export default class Timer extends Vue {
   tick() {
     this.seconds -= 1;
     if (this.seconds < 0) {
+      const audio = new Audio("/mp3/chime.mp3");
+      audio.play();
       this.stop();
       return;
     }
@@ -237,6 +228,8 @@ export default class Timer extends Vue {
   redIn() {
     this.isRed = true;
     this.pause();
+    const audio = new Audio("/mp3/bip.mp3");
+    audio.play();
   }
 
   redOut() {
