@@ -1,4 +1,4 @@
-# ZNC: the new Zero Noise Classroom timer
+# ZNC: The new classroom countdown timer for the Zero Noise Classroom project
 
 ## Project setup
 
