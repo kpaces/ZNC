@@ -252,8 +252,6 @@ export default class Timer extends Vue {
   }
 
   success(stream: any) {
-    alert(5);
-
     const w: any = window;
 
     w.AudioContext = w.AudioContext || w.webkitAudioContext;
@@ -264,7 +262,7 @@ export default class Timer extends Vue {
     this.audioContext = new w.AudioContext();
     let canvas: any = this.$refs.display;
     this.canvasContext = (canvas as HTMLCanvasElement).getContext("2d");
-    this.medianFilter = createMedianFilter(63);
+    this.medianFilter = createMedianFilter(33);
 
     let mediaStreamSource: any = this.audioContext.createMediaStreamSource(
       stream
@@ -520,7 +518,7 @@ pause-stop-size = 20vmin
   width 15vmin !important
   border-radius 5vmin
   background none !important
-  color #906060
+  color #606060
   -webkit-box-shadow none !important
   box-shadow none !important
   outline 0 none !important
