@@ -12,9 +12,8 @@
             type="number"
             ref="timeset"
             v-model="timeLimit"
-            @native:blur="fixTime"
+            @blur="fixTime"
             @keypress.enter="play"
-            @change="play"
           />
           <a @click.prevent.stop="play" class="linkButton" title="P l a y">
             <span class="material-icons">play_arrow</span>
