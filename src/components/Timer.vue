@@ -47,10 +47,10 @@
       title="S e n s i t i v i t y"
       class="slider"
       v-model="sensitivity"
-      :min="350"
-      :max="595"
+      :min="300"
+      :max="600"
       :dotSize="30"
-      :interval="5"
+      :interval="10"
       :marks="false"
     ></vue-slider>
   </div>
@@ -75,19 +75,20 @@ export default class Timer extends Vue {
   width: number = 1920;
   height: number = 1080;
   medianFilter: any = null;
+  medianFilter2: any = null;
   noiseFilter: boolean = true;
   seconds: number = 0;
   interval: any = null;
-  resolution: number = 1920;
-  speed: number = this.resolution / 10;
+  resolution: number = 320;
+  speed: number = this.resolution * 5;
   blur: number = 1;
-  sensitivity: number = 500;
+  sensitivity: number = 450;
   timeLimit: number = 5;
   status: number = 0;
   redTimer: any = null;
   isRed: boolean = false;
   preRed: boolean = false;
-  redWait: number = 2000;
+  redWait: number = 1500;
 
   get time() {
     return `${Math.floor(this.seconds / 60)}<span class="sep">:</span>${(
@@ -125,6 +126,16 @@ export default class Timer extends Vue {
         this.pause();
       }
     });
+
+    const savedSensitivity: any = localStorage.getItem("ZNC-sensitivity");
+    if (savedSensitivity !== null) {
+      this.sensitivity = parseInt(savedSensitivity, 10);
+    }
+
+    const savedTimeLimit: any = localStorage.getItem("ZNC-timeLimit");
+    if (savedTimeLimit !== null) {
+      this.timeLimit = parseInt(savedTimeLimit, 10);
+    }
   }
 
   mounted() {
@@ -138,7 +149,13 @@ export default class Timer extends Vue {
 
     if (val.length > 0) {
       this.timeLimit = Math.max(1, Math.min(90, v));
+      localStorage.setItem("ZNC-timeLimit", v.toString());
     }
+  }
+
+  @Watch("sensitivity")
+  onSensitivityChanged(val: string) {
+    localStorage.setItem("ZNC-sensitivity", val);
   }
 
   fixTime() {
@@ -204,10 +221,14 @@ export default class Timer extends Vue {
   }
 
   stop() {
+    clearTimeout(this.redTimer);
     clearInterval(this.interval);
     this.status = 0;
     this.seconds = 0;
     this.micEnabled = false;
+    this.isRed = false;
+    this.preRed = false;
+
     setTimeout(() => {
       (this.$refs.timeset as HTMLInputElement).focus();
     }, 150);
@@ -238,8 +259,11 @@ export default class Timer extends Vue {
       this.preRed = false;
     }
     if (this.isRed) {
+      clearTimeout(this.redTimer);
       this.isRed = false;
       this.pause();
+      const audio = new Audio("/mp3/bip2.mp3");
+      audio.play();
     }
   }
 
@@ -255,6 +279,7 @@ export default class Timer extends Vue {
     let canvas: any = this.$refs.display;
     this.canvasContext = (canvas as HTMLCanvasElement).getContext("2d");
     this.medianFilter = createMedianFilter(33);
+    this.medianFilter2 = createMedianFilter(3);
 
     let mediaStreamSource: any = this.audioContext.createMediaStreamSource(
       stream
@@ -388,7 +413,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
   drawLoop(time: number) {
     let v: number = Math.round(this.meter.volume * 512.0);
     v = Math.max(0, Math.min(255, v));
-    v = 255 * Math.pow(v / 255, (600 - this.sensitivity) / 100);
+    v = 255 * Math.pow(v / 255, (625 - this.sensitivity) / 100);
     v = (255 * Math.log(v)) / Math.log(255);
     v = Math.round(Math.max(0, Math.min(255, v)));
 
@@ -397,6 +422,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
     this.canvasContext.clearRect(0, 0, this.width, this.height);
 
     let h: number = Math.max(0, Math.min(this.height, this.height * (v / 255)));
+    let hh: number = this.medianFilter2(h);
     if (this.noiseFilter) {
       h = this.medianFilter(h);
     }
@@ -414,25 +440,29 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
     this.canvasContext.beginPath();
     this.canvasContext.moveTo(
       0,
-      this.height - h * 1.02 + 50 * Math.sin(time / this.speed)
+      this.height - hh + 25 * Math.sin(time / this.speed)
     );
     this.canvasContext.lineTo(
       this.width,
-      this.height - h * 1.03 + 50 * Math.cos(time / this.speed)
+      this.height - hh + 25 * Math.cos(time / this.speed)
     );
     this.canvasContext.lineTo(this.width, this.height);
     this.canvasContext.lineTo(0, this.height);
     this.canvasContext.fill();
 
     if (h < t) {
-      this.canvasContext.fillStyle = `rgba(128,255,128,.5)`;
-      this.redOut();
+      this.canvasContext.fillStyle = `rgba(128,255,128,.65)`;
+      if (this.status === 3) {
+        this.redOut();
+      }
     } else if (h >= t && h < 2 * t) {
-      this.canvasContext.fillStyle = `rgba(255,192,80,.5)`;
-      this.redOut();
+      this.canvasContext.fillStyle = `rgba(255,192,80,.65)`;
+      if (this.status === 3) {
+        this.redOut();
+      }
     } else {
       // RED state
-      this.canvasContext.fillStyle = `rgba(255,100,100,.5)`;
+      this.canvasContext.fillStyle = `rgba(255,100,100,.65)`;
       if (!this.isRed && !this.preRed && this.status === 1) {
         this.redTimer = setTimeout(this.redIn, this.redWait);
         this.preRed = true;
@@ -505,11 +535,12 @@ pause-stop-size = 20vmin
   line-height 0vmin
   text-align center
   text-shadow 0.6vmin 0 0 rgba(0, 0, 0, 0.1)
-  border 0 dotted rgba(0, 0, 0, 0.05) !important
+  border 1px solid rgba(0, 0, 0, 0.05) !important
   padding 0.5vmin 1vmin 0 0
   width 15vmin !important
+  height 15vmin !important
   border-radius 50%
-  background rgba(255,255,255,0.75) !important
+  background rgba(255, 255, 255, 0.65) !important
   color #606060
   -webkit-box-shadow none !important
   box-shadow none !important
@@ -536,7 +567,7 @@ input[type=number]
   margin 0 1rem 1rem 1rem
   z-index 3
   transition opacity 0.15s ease-in-out
-  opacity 0.05
+  opacity 0.15
 
   &:hover
     opacity 1
@@ -612,7 +643,7 @@ slider-width = 2 * slider-margin-x
   bottom 0
   cursor pointer
   transition opacity 0.5s linear
-  opacity 0.075
+  opacity 0.15
 
   &:hover
     opacity 0.9

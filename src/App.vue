@@ -154,8 +154,8 @@ a.linkButton
 
 @media screen and (max-height: 450px), screen and (max-width: 640px)
   #nav
-    opacity 0.075
+    opacity 0.15
 
   #logo
-    opacity 0.075
+    opacity 0.15
 </style>

@@ -25,8 +25,8 @@ export default class Cover extends Vue {}
   position absolute
   top 0
   left 0
-  width 100%
-  height 100%
+  width 100vw
+  height 100vh
   background-color rgba(240, 240, 240, 0.75)
   z-index 10
   backdrop-filter blur(11px)
@@ -36,7 +36,7 @@ export default class Cover extends Vue {}
 #close
   font-size 2rem
   color #606060
-  opacity 0.1
+  opacity 0.15
   transition opacity 0.5s ease-in-out
 
   &:hover
