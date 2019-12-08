@@ -47,10 +47,10 @@
       title="S e n s i t i v i t y"
       class="slider"
       v-model="sensitivity"
-      :min="250"
-      :max="500"
+      :min="350"
+      :max="595"
       :dotSize="30"
-      :interval="25"
+      :interval="5"
       :marks="false"
     ></vue-slider>
   </div>
@@ -505,11 +505,11 @@ pause-stop-size = 20vmin
   line-height 0vmin
   text-align center
   text-shadow 0.6vmin 0 0 rgba(0, 0, 0, 0.1)
-  border 3px dotted rgba(0, 0, 0, 0.05) !important
+  border 0 dotted rgba(0, 0, 0, 0.05) !important
   padding 0.5vmin 1vmin 0 0
   width 15vmin !important
-  border-radius 5vmin
-  background none !important
+  border-radius 50%
+  background rgba(255,255,255,0.75) !important
   color #606060
   -webkit-box-shadow none !important
   box-shadow none !important
