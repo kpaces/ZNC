@@ -14,7 +14,7 @@
       </p>
 
       <h3>Support</h3>
-      <p>Please, consider making a donation if you find ZNC useful</p>
+      <p>Please, consider making a donation if you find ZNC useful. Thanks in advance!</p>
       <form
         action="https://www.paypal.com/cgi-bin/webscr"
         method="post"
