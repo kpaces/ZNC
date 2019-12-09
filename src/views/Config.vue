@@ -2,6 +2,7 @@
   <div class="config">
     <Cover>
       <h2>Config</h2>
+      <p>Coming soon</p>
     </Cover>
   </div>
 </template>

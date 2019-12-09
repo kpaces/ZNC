@@ -115,27 +115,31 @@
             >CC BY 3.0</a
           >
         </li>
-        <li style="margin-top:1em"><a
-            href="https://wangchujiang.com/hotkeys/"
-            target="_blank"
-            >Hotkeys-js</a>. <a
+        <li style="margin-top:1em">
+          <a href="https://wangchujiang.com/hotkeys/" target="_blank"
+            >Hotkeys-js</a
+          >.
+          <a
             href="https://github.com/mikolalysenko/moving-median"
             target="_blank"
-            >Moving-median</a>. <a
+            >Moving-median</a
+          >.
+          <a
             href="https://github.com/NightCatSama/vue-slider-component"
             target="_blank"
-            >Vue-slider-component</a></li>
-        <li><a
-            href="https://vuejs.org/"
-            target="_blank"
-            >Vue</a></li>
+            >Vue-slider-component</a
+          >
+        </li>
+        <li><a href="https://vuejs.org/" target="_blank">Vue</a></li>
       </ul>
 
       <h3>Thanks</h3>
-      <p>Elissa Clark. Jack. My always patient family. My students</p>
+      <p>Elissa Clair. Jack. My always patient family. My students</p>
 
       <h3>Contact</h3>
-      <a href="mailto:manuel.llorens@kpaces.com" target="_blank">Manuel Llorens</a>
+      <a href="mailto:manuel.llorens@kpaces.com" target="_blank"
+        >Manuel Llorens</a
+      >
     </Cover>
   </div>
 </template>

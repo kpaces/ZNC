@@ -65,7 +65,7 @@ body
 
 h2
   font-size 150% !important
-  margin-top 1em
+  margin-top 1em !important
 
 h3
   font-size 125% !important
