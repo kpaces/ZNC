@@ -560,6 +560,7 @@ pause-stop-size = 20vmin
   box-shadow none !important
   outline 0 none !important
   -webkit-appearance none !important
+  -moz-appearance textfield
 
   &:focus
     border-color inherit
