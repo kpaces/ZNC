@@ -75,8 +75,8 @@ p
 ul
   line-height 2em
 
-ul
-  margin-top 1em !important
+form
+  margin-top 1em
 
 a:not(.linkButton)
   color link-color !important
