@@ -134,7 +134,7 @@
       </ul>
 
       <h3>Thanks</h3>
-      <p>Elissa Clair. Jack. My always patient family. My students</p>
+      <p>Elissa Clair. Jack Gómez Robisco. My always patient family. My students</p>
 
       <h3>Contact</h3>
       <a href="mailto:manuel.llorens@kpaces.com" target="_blank"
