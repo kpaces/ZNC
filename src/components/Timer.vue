@@ -2,9 +2,10 @@
   <div>
     <transition-group name="fade">
       <div id="play" key="play" v-if="!micEnabled">
-        <div>
+        <div @click.prevent.stop="play">
           <input
             title="M i n u t e s  (1 - 9 0)"
+            @click.prevent.stop="doNothing"
             min="1"
             max="90"
             maxlength="2"
@@ -15,15 +16,15 @@
             @blur="fixTime"
             @keypress.enter="play"
           />
-          <a @click.prevent.stop="play" class="linkButton" title="P l a y">
+          <a class="linkButton" title="P l a y">
             <span class="material-icons">play_arrow</span>
           </a>
         </div>
       </div>
 
       <div id="pause" key="pause" v-if="micEnabled">
-        <div>
-          <a @click.prevent.stop="pause" class="linkButton" title="P a u s e">
+        <div @click.prevent.stop="pause">
+          <a class="linkButton" title="P a u s e">
             <span v-if="status === 1" class="material-icons">pause</span>
             <span v-else class="material-icons">play_arrow</span>
           </a>
@@ -31,17 +32,28 @@
       </div>
 
       <div id="stop" key="stop" v-if="micEnabled">
-        <div>
-          <a @click.prevent.stop="stop" class="linkButton" title="S t o p">
+        <div @click.prevent.stop="stop">
+          <a class="linkButton" title="S t o p">
             <span class="material-icons">stop</span>
           </a>
         </div>
       </div>
 
-      <div id="time" :class="{ blinking: status > 1 }" key="time" v-if="micEnabled" v-html="time"></div>
+      <div
+        id="time"
+        :class="{ blinking: status > 1 }"
+        key="time"
+        v-if="micEnabled"
+        v-html="time"
+      ></div>
     </transition-group>
 
-    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
+    <canvas
+      :width="resolution"
+      height="1080"
+      ref="display"
+      id="display"
+    ></canvas>
 
     <vue-slider
       title="S e n s i t i v i t y"
@@ -157,6 +169,8 @@ export default class Timer extends Vue {
   onSensitivityChanged(val: string) {
     localStorage.setItem("ZNC-sensitivity", val);
   }
+
+  doNothing() {}
 
   fixTime() {
     this.timeLimit = Math.max(1, Math.min(90, this.timeLimit));
@@ -494,7 +508,6 @@ pause-stop-size = 20vmin
   left 0
   overflow hidden
   align-items center
-  cursor pointer
 
 #timeset
   display block
@@ -517,6 +530,7 @@ pause-stop-size = 20vmin
   justify-content center
   align-items center
   box-sizing border-box
+  cursor pointer
 
 #play div
   width play-size
