@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Timer />
-    <div title="This is Zero Noise Classroom countdown timer" id="logo">ZNC</div>
+    <div title="This is Zero Noise Classroom countdown timer" id="logo"><img src="img/logo.svg" /></div>
 
     <div id="nav">
       <router-link title="back to the timer" to="/">Home</router-link>

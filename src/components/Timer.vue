@@ -10,7 +10,7 @@
             max="90"
             maxlength="2"
             id="timeset"
-            type="number"
+            type="tel"
             ref="timeset"
             v-model="timeLimit"
             @blur="fixTime"
@@ -39,21 +39,10 @@
         </div>
       </div>
 
-      <div
-        id="time"
-        :class="{ blinking: status > 1 }"
-        key="time"
-        v-if="micEnabled"
-        v-html="time"
-      ></div>
+      <div id="time" :class="{ blinking: status > 1 }" key="time" v-if="micEnabled" v-html="time"></div>
     </transition-group>
 
-    <canvas
-      :width="resolution"
-      height="1080"
-      ref="display"
-      id="display"
-    ></canvas>
+    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
 
     <vue-slider
       title="S e n s i t i v i t y"
@@ -560,20 +549,18 @@ pause-stop-size = 20vmin
   box-shadow none !important
   outline 0 none !important
   -webkit-appearance none !important
-  -moz-appearance textfield
 
   &:focus
     border-color inherit
 
 /* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button
-input::-webkit-inner-spin-button
+input[type=number]::-webkit-inner-spin-button
+input[type=number]::-webkit-outer-spin-button
   -webkit-appearance none
   margin 0
 
-/* Firefox */
 input[type=number]
-  -moz-appearance textfield
+  -moz-appearance textfield !important
 
 #pause div
 #stop div
