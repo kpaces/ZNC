@@ -1,12 +1,13 @@
 <template>
   <div id="app">
     <Timer />
-    <div title="This is Zero Noise Classroom countdown timer" id="logo"><img src="img/logo.svg" /></div>
+    <div id="logo"><img src="img/logo.svg" /></div>
 
     <div id="nav">
-      <router-link title="back to the timer" to="/">Home</router-link>
-      <router-link title="ZNC configuration" to="/config">Config</router-link>
-      <router-link title="About ZNC" to="/about">About</router-link>
+      <router-link to="/">Home</router-link>
+      <router-link to="/config">Config</router-link>
+      <router-link to="/faq">FAQ</router-link>
+      <router-link to="/about">About</router-link>
     </div>
 
     <div id="main">
