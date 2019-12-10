@@ -30,6 +30,7 @@ export default class Cover extends Vue {}
   background-color rgba(240, 240, 240, 0.75)
   z-index 10
   backdrop-filter blur(11px)
+  -webkit-backdrop-filter blur(11px)
   padding 3rem
   overflow auto
 

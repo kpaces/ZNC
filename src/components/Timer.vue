@@ -281,8 +281,8 @@ export default class Timer extends Vue {
     this.audioContext = new w.AudioContext();
     let canvas: any = this.$refs.display;
     this.canvasContext = (canvas as HTMLCanvasElement).getContext("2d");
-    this.medianFilter = createMedianFilter(33);
-    this.medianFilter2 = createMedianFilter(3);
+    this.medianFilter = createMedianFilter(63);
+    this.medianFilter2 = createMedianFilter(5);
 
     let mediaStreamSource: any = this.audioContext.createMediaStreamSource(
       stream
