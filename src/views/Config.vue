@@ -98,7 +98,7 @@
 
       <h3>Noise filter</h3>
       <p>
-        The noise filter discards short noises, like a pen drop, and makes the
+        The noise filter discards short noises, like a dropped pencil, and makes the
         meter more stable
       </p>
       <div class="columns">
