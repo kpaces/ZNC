@@ -14,7 +14,10 @@
       </p>
 
       <h3>Support</h3>
-      <p>Please, consider making a donation if you find ZNC useful. Thanks in advance!</p>
+      <p>
+        If you find ZNC useful, please consider making a donation. Thanks in
+        advance!
+      </p>
       <form
         action="https://www.paypal.com/cgi-bin/webscr"
         method="post"
@@ -134,23 +137,34 @@
       </ul>
 
       <h3>Thanks</h3>
-      <p>Elissa Clair. Jack Gómez Robisco. My always patient family. My students</p>
+      <p>
+        Elissa Clair. Jack Gómez Robisco. My always patient family. My students
+      </p>
 
       <h3>Contact</h3>
       <a href="mailto:manuel.llorens@kpaces.com" target="_blank"
         >Manuel Llorens</a
       >
+
+      <h3>Version</h3>
+      <p>{{ version }}</p>
     </Cover>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
 import Cover from "@/components/Cover.vue";
 
 export default {
   name: "about",
   components: {
     Cover
+  },
+  data() {
+    return {
+      version: process.env.VUE_APP_VERSION
+    }
   }
 };
 </script>

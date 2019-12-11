@@ -1,12 +1,6 @@
 <template>
   <div id="cover">
-    <router-link
-      title="C l o s e"
-      id="close"
-      class="linkButton material-icons"
-      to="/"
-      >close
-    </router-link>
+    <router-link title="C l o s e" id="close" class="linkButton material-icons" to="/">close</router-link>
     <slot></slot>
   </div>
 </template>
@@ -32,7 +26,7 @@ export default class Cover extends Vue {}
   backdrop-filter blur(11px)
   -webkit-backdrop-filter blur(11px)
   padding 3rem
-  overflow auto
+  overflow-y scroll
 
 #close
   font-size 2rem
@@ -42,4 +36,20 @@ export default class Cover extends Vue {}
 
   &:hover
     opacity 0.5
+
+::-webkit-scrollbar-track
+::scrollbar-track
+  border-radius 0
+  background-color transparent
+
+::-webkit-scrollbar
+  width 6px
+  height 6px
+  border-left 0
+  background-color transparent
+
+::-webkit-scrollbar-thumb
+  border-left 0
+  border-radius 0
+  background-color rgba(0, 0, 0, 0.125)
 </style>

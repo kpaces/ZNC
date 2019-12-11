@@ -59,6 +59,8 @@
 
 <script lang="ts">
 import { Component, Watch, Prop, Vue } from "vue-property-decorator";
+import { mapState } from "vuex";
+
 import VueSlider from "vue-slider-component";
 import hotkeys from "hotkeys-js";
 
@@ -66,6 +68,7 @@ let createMedianFilter: any = require("moving-median");
 
 @Component({
   name: "Timer",
+
   components: { VueSlider }
 })
 export default class Timer extends Vue {
@@ -113,6 +116,18 @@ export default class Timer extends Vue {
     return ind[i];
   }
 
+  get mode() {
+    return this.$store.state.mode;
+  }
+
+  get noise() {
+    return this.$store.state.noise;
+  }
+
+  get step() {
+    return this.$store.state.timeStep;
+  }
+
   created() {
     hotkeys("esc", ev => {
       ev.preventDefault();
@@ -137,6 +152,21 @@ export default class Timer extends Vue {
     if (savedTimeLimit !== null) {
       this.timeLimit = parseInt(savedTimeLimit, 10);
     }
+
+    const savedMode: any = localStorage.getItem("ZNC-mode");
+    if (savedMode !== null) {
+      this.$store.commit("setMode", parseInt(savedMode, 10));
+    }
+
+    const savedNoise: any = localStorage.getItem("ZNC-noiseFilter");
+    if (savedNoise !== null) {
+      this.$store.commit("setNoise", parseInt(savedNoise, 10));
+    }
+
+    const savedTimeStep: any = localStorage.getItem("ZNC-timeStep");
+    if (savedTimeStep !== null) {
+      this.$store.commit("setTimeStep", parseInt(savedTimeStep, 10));
+    }
   }
 
   mounted() {
@@ -146,17 +176,30 @@ export default class Timer extends Vue {
 
   @Watch("timeLimit")
   onTimeLimitChanged(val: string) {
-    const v = parseInt(val, 10);
+    let v = parseInt(val, 10);
+    if (isNaN(v)) {
+      v = 5;
+    }
 
     if (val.length > 0) {
       this.timeLimit = Math.max(1, Math.min(90, v));
-      localStorage.setItem("ZNC-timeLimit", v.toString());
+      localStorage.setItem("ZNC-timeLimit", this.timeLimit.toString());
     }
   }
 
   @Watch("sensitivity")
   onSensitivityChanged(val: string) {
     localStorage.setItem("ZNC-sensitivity", val);
+  }
+
+  @Watch("noise")
+  onNoiseChanged(val: number) {
+    this.medianFilter = createMedianFilter(Math.pow(2, 2 * val + 3) + 1);
+  }
+
+  @Watch("mode")
+  onModeChange(val: number) {
+      this.redOut();
   }
 
   doNothing() {}
@@ -281,7 +324,7 @@ export default class Timer extends Vue {
     this.audioContext = new w.AudioContext();
     let canvas: any = this.$refs.display;
     this.canvasContext = (canvas as HTMLCanvasElement).getContext("2d");
-    this.medianFilter = createMedianFilter(63);
+    this.medianFilter = createMedianFilter(Math.pow(2, this.noise + 4) + 1);
     this.medianFilter2 = createMedianFilter(5);
 
     let mediaStreamSource: any = this.audioContext.createMediaStreamSource(
@@ -432,7 +475,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
 
     let t: number = this.height / 3;
 
-    if (h < t) {
+    /* if (h < t) {
       this.canvasContext.fillStyle = `rgba(128,255,128,.25)`;
     } else if (h >= t && h < 2 * t) {
       this.canvasContext.fillStyle = `rgba(255,192,80,.25)`;
@@ -451,22 +494,22 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
     );
     this.canvasContext.lineTo(this.width, this.height);
     this.canvasContext.lineTo(0, this.height);
-    this.canvasContext.fill();
+    this.canvasContext.fill(); */
 
     if (h < t) {
       this.canvasContext.fillStyle = `rgba(128,255,128,.65)`;
-      if (this.status === 3) {
+      if (this.status === 3 && this.mode > 0) {
         this.redOut();
       }
     } else if (h >= t && h < 2 * t) {
       this.canvasContext.fillStyle = `rgba(255,192,80,.65)`;
-      if (this.status === 3) {
+      if (this.status === 3 && this.mode > 0) {
         this.redOut();
       }
     } else {
       // RED state
       this.canvasContext.fillStyle = `rgba(255,100,100,.65)`;
-      if (!this.isRed && !this.preRed && this.status === 1) {
+      if (!this.isRed && !this.preRed && this.status === 1 && this.mode > 0) {
         this.redTimer = setTimeout(this.redIn, this.redWait);
         this.preRed = true;
       }
@@ -524,7 +567,7 @@ pause-stop-size = 20vmin
 #play div
   width play-size
   height play-size
-  background-color rgba(0, 0, 0, 0.025)
+  background-color rgba(0, 0, 0, 0.05)
   flex-direction column
 
   &:hover
@@ -538,7 +581,7 @@ pause-stop-size = 20vmin
   line-height 0vmin
   text-align center
   text-shadow 0.6vmin 0 0 rgba(0, 0, 0, 0.1)
-  border 1px solid rgba(0, 0, 0, 0.05) !important
+  border 1px solid rgba(0, 0, 0, 0) !important
   padding 0.5vmin 1vmin 0 0
   width 15vmin !important
   height 15vmin !important

@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <Timer />
-    <div id="logo"><img src="img/logo.svg" /></div>
+    <div id="logo">
+      <img src="img/logo.svg" />
+    </div>
 
     <div id="nav">
       <router-link to="/">Home</router-link>
@@ -63,14 +65,17 @@ body
   -ms-user-select none /* Internet Explorer/Edge */
   user-select none   /* Non-prefixed version, currently
   supported by Chrome, Opera and Firefox */
+  text-rendering optimizeLegibility !important
 
 h2
   font-size 150% !important
   margin-top 1em !important
+  font-weight 600 !important
 
 h3
   font-size 125% !important
   margin-top 2em !important
+  font-weight 400 !important
 
 p
 ul
