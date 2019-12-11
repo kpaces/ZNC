@@ -1,6 +1,12 @@
 <template>
   <div id="cover">
-    <router-link title="C l o s e" id="close" class="linkButton material-icons" to="/">close</router-link>
+    <router-link
+      title="C l o s e"
+      id="close"
+      class="linkButton material-icons"
+      to="/"
+      >close</router-link
+    >
     <slot></slot>
   </div>
 </template>

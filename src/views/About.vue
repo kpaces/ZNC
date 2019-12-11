@@ -164,7 +164,7 @@ export default {
   data() {
     return {
       version: process.env.VUE_APP_VERSION
-    }
+    };
   }
 };
 </script>

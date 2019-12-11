@@ -39,10 +39,21 @@
         </div>
       </div>
 
-      <div id="time" :class="{ blinking: status > 1 }" key="time" v-if="micEnabled" v-html="time"></div>
+      <div
+        id="time"
+        :class="{ blinking: status > 1 }"
+        key="time"
+        v-if="micEnabled"
+        v-html="time"
+      ></div>
     </transition-group>
 
-    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
+    <canvas
+      :width="resolution"
+      height="1080"
+      ref="display"
+      id="display"
+    ></canvas>
 
     <vue-slider
       title="S e n s i t i v i t y"
@@ -199,7 +210,7 @@ export default class Timer extends Vue {
 
   @Watch("mode")
   onModeChange(val: number) {
-      this.redOut();
+    this.redOut();
   }
 
   doNothing() {}
