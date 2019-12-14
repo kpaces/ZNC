@@ -135,7 +135,7 @@ export default {
 };
 </script>
 
-<style lang="stylus">
+<style scoped lang="stylus">
 #kpaces
   margin 1em 0 0.5em 0 !important
   height 50px
