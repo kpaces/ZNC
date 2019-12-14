@@ -27,12 +27,8 @@
         </li>
         <li class="question">What does ZNC do when the meter hits red?</li>
         <li>
-          At this moment, it waits for one second of continous red and then
-          automatically pauses the timer, and plays a double beep sound. It
-          resumes again when the meter goes yellow or green, and plays a single
-          beep sound. In the near future, you will be able to choose between
-          this behaviours when the meter hits red: pause timer, increase time or
-          decrease time.
+          It waits for one and a hanlf second of continous red and then
+          automatically does what you chooses in the config screen.
         </li>
         <li class="question">Can I control ZNC with the keyboard?</li>
         <li>
@@ -52,8 +48,8 @@
         </li>
         <li class="question">Why does ZNC not sense some short sounds?</li>
         <li>
-          ZNC uses a running median filter to discard short but loud noises. In
-          the near future you will be able to adjust that filter to some extend.
+          ZNC uses a running median filter to discard short but loud noises. You
+          can adjust that filter in the config screen.
         </li>
         <li class="question">
           Is ZNC going to present some kind of information when the time is up?

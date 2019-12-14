@@ -39,21 +39,10 @@
         </div>
       </div>
 
-      <div
-        id="time"
-        :class="{ blinking: status > 1 }"
-        key="time"
-        v-if="micEnabled"
-        v-html="time"
-      ></div>
+      <div id="time" :class="{ blinking: status > 1 }" key="time" v-if="micEnabled" v-html="time"></div>
     </transition-group>
 
-    <canvas
-      :width="resolution"
-      height="1080"
-      ref="display"
-      id="display"
-    ></canvas>
+    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
 
     <vue-slider
       title="S e n s i t i v i t y"
@@ -101,9 +90,14 @@ export default class Timer extends Vue {
   timeLimit: number = 5;
   status: number = 0;
   redTimer: any = null;
+  redTimer2: any = null;
   isRed: boolean = false;
   preRed: boolean = false;
-  redWait: number = 1500;
+  redWait: number = 1.5 * 1000;
+  inRed: boolean = false;
+  inRedTime: number = 5 * 1000;
+  stats: number[] = [0, 0, 0];
+  timeStats: number[][] = [];
 
   get time() {
     return `${Math.floor(this.seconds / 60)}<span class="sep">:</span>${(
@@ -211,6 +205,9 @@ export default class Timer extends Vue {
   @Watch("mode")
   onModeChange(val: number) {
     this.redOut();
+    this.inRed = false;
+    clearTimeout(this.redTimer);
+    clearTimeout(this.redTimer2);
   }
 
   doNothing() {}
@@ -221,6 +218,8 @@ export default class Timer extends Vue {
 
   play() {
     this.seconds = this.timeLimit * 60;
+    this.stats = [0, 0, 0];
+    this.timeStats = [];
 
     const n: any = navigator;
     n.getUserMedia =
@@ -279,12 +278,14 @@ export default class Timer extends Vue {
 
   stop() {
     clearTimeout(this.redTimer);
+    clearTimeout(this.redTimer2);
     clearInterval(this.interval);
     this.status = 0;
     this.seconds = 0;
     this.micEnabled = false;
     this.isRed = false;
     this.preRed = false;
+    this.inRed = false;
 
     setTimeout(() => {
       (this.$refs.timeset as HTMLInputElement).focus();
@@ -304,24 +305,57 @@ export default class Timer extends Vue {
   }
 
   redIn() {
-    this.isRed = true;
-    this.pause();
+    clearTimeout(this.redTimer);
+    clearTimeout(this.redTimer2);
+    this.preRed = false;
+
+    if (this.inRed) {
+      return;
+    }
+
     const audio = new Audio("/mp3/bip.mp3");
     audio.play();
+
+    switch (this.mode) {
+      case 0:
+        break;
+      case 1:
+        this.isRed = true;
+        this.pause();
+        break;
+      case 2:
+        this.seconds += this.step;
+        this.inRed = true;
+        break;
+      case 3:
+        this.seconds = Math.max(0, this.seconds - this.step);
+        this.inRed = true;
+        break;
+    }
+
+    if (this.inRed) {
+      this.redTimer2 = setTimeout(() => {
+        this.inRedOut();
+      }, this.inRedTime);
+    }
   }
 
   redOut() {
-    if (this.preRed) {
-      clearTimeout(this.redTimer);
-      this.preRed = false;
-    }
+    clearTimeout(this.redTimer);
+    clearTimeout(this.redTimer2);
+    this.preRed = false;
+    this.inRed = false;
+
     if (this.isRed) {
-      clearTimeout(this.redTimer);
       this.isRed = false;
       this.pause();
       const audio = new Audio("/mp3/bip2.mp3");
       audio.play();
     }
+  }
+
+  inRedOut() {
+    this.inRed = false;
   }
 
   success(stream: any) {
@@ -479,50 +513,61 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
     this.canvasContext.clearRect(0, 0, this.width, this.height);
 
     let h: number = Math.max(0, Math.min(this.height, this.height * (v / 255)));
-    let hh: number = this.medianFilter2(h);
     if (this.noiseFilter) {
       h = this.medianFilter(h);
     }
-
     let t: number = this.height / 3;
 
-    /* if (h < t) {
-      this.canvasContext.fillStyle = `rgba(128,255,128,.25)`;
-    } else if (h >= t && h < 2 * t) {
-      this.canvasContext.fillStyle = `rgba(255,192,80,.25)`;
-    } else {
-      this.canvasContext.fillStyle = `rgba(255,100,100,.25)`;
+    // Perform running mean for the time stats
+    if (this.status === 1) {
+      const seconds = this.timeLimit * 60;
+      const st = this.timeStats[seconds - this.seconds];
+
+      if (typeof st !== "undefined") {
+        const n = st[0];
+        this.timeStats[seconds - this.seconds] = [
+          n + 1,
+          (st[1] * n + h / t) / (n + 1)
+        ];
+      } else {
+        this.timeStats[seconds - this.seconds] = [1, h / t];
+      }
     }
 
-    this.canvasContext.beginPath();
-    this.canvasContext.moveTo(
-      0,
-      this.height - hh + 25 * Math.sin(time / this.speed)
-    );
-    this.canvasContext.lineTo(
-      this.width,
-      this.height - hh + 25 * Math.cos(time / this.speed)
-    );
-    this.canvasContext.lineTo(this.width, this.height);
-    this.canvasContext.lineTo(0, this.height);
-    this.canvasContext.fill(); */
-
     if (h < t) {
+      // GREEN state
       this.canvasContext.fillStyle = `rgba(128,255,128,.65)`;
-      if (this.status === 3 && this.mode > 0) {
+      if (this.status === 1) {
+        this.stats[0] += 1;
+      }
+      if (this.mode > 0 && !this.inRed) {
         this.redOut();
       }
     } else if (h >= t && h < 2 * t) {
+      // YELLOW state
       this.canvasContext.fillStyle = `rgba(255,192,80,.65)`;
-      if (this.status === 3 && this.mode > 0) {
+      if (this.status === 1) {
+        this.stats[1] += 1;
+      }
+      if (this.mode > 0 && !this.inRed) {
         this.redOut();
       }
     } else {
       // RED state
       this.canvasContext.fillStyle = `rgba(255,100,100,.65)`;
-      if (!this.isRed && !this.preRed && this.status === 1 && this.mode > 0) {
-        this.redTimer = setTimeout(this.redIn, this.redWait);
+      if (this.status === 1) {
+        this.stats[2] += 1;
+      }
+      if (
+        !this.isRed &&
+        !this.preRed &&
+        this.status === 1 &&
+        this.mode > 0 &&
+        !this.inRed
+      ) {
+        clearTimeout(this.redTimer);
         this.preRed = true;
+        this.redTimer = setTimeout(this.redIn, this.redWait);
       }
     }
 

@@ -158,7 +158,7 @@ a.linkButton
 .fade-leave-to
   opacity 0
 
-@media screen and (max-height: 450px), screen and (max-width: 640px)
+@media screen and (max-height: 350px), screen and (max-width: 350px)
   #nav
     opacity 0.15
 
