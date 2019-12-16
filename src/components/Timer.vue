@@ -39,10 +39,21 @@
         </div>
       </div>
 
-      <div id="time" :class="{ blinking: status > 1 }" key="time" v-if="micEnabled" v-html="time"></div>
+      <div
+        id="time"
+        :class="{ blinking: status > 1 }"
+        key="time"
+        v-if="micEnabled"
+        v-html="time"
+      ></div>
     </transition-group>
 
-    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
+    <canvas
+      :width="resolution"
+      height="1080"
+      ref="display"
+      id="display"
+    ></canvas>
 
     <vue-slider
       title="S e n s i t i v i t y"
@@ -140,7 +151,21 @@ export default class Timer extends Vue {
       }
     });
 
+    hotkeys("pagedown", ev => {
+      ev.preventDefault();
+      if (this.status > 0) {
+        this.stop();
+      }
+    });
+
     hotkeys("space", ev => {
+      ev.preventDefault();
+      if (this.status > 0) {
+        this.pause();
+      }
+    });
+
+    hotkeys("pageup", ev => {
       ev.preventDefault();
       if (this.status > 0) {
         this.pause();
@@ -590,7 +615,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
-@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap')
+@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=block')
 
 play-size = 42vmin
 pause-stop-size = 20vmin
@@ -622,6 +647,7 @@ pause-stop-size = 20vmin
 #play div
 #pause div
 #stop div
+  font-display block !important
   border-radius 50%
   line-height 0
   display flex
@@ -642,6 +668,7 @@ pause-stop-size = 20vmin
 
 #play input
   font-family 'Share Tech Mono'
+  font-display block
   letter-spacing -0.1em
   font-size 12vmin
   line-height 0vmin
@@ -693,6 +720,7 @@ input[type=number]
 
 #time
   font-family 'Share Tech Mono'
+  font-display block
   letter-spacing -0.1em
   font-size 43vmin
   position absolute

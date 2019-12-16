@@ -12,10 +12,9 @@
         <li>
           No. ZNC only runs on your browser and doesn't record anything. You can
           explore the
-          <a
-            href="https://github.com/kpaces/ZNC"
-            target="_blank"
-          >source code</a>
+          <a href="https://github.com/kpaces/ZNC" target="_blank"
+            >source code</a
+          >
           yourself.
         </li>
         <li class="question">
@@ -34,12 +33,14 @@
         <li class="question">Can I control ZNC with the keyboard?</li>
         <li>
           Yes, you can pause and resume with the SPACEBAR and stop it with the
-          ENTER key. In the future I plan to add more keys so that you control
-          it with a presentation remote.
+          ENTER key. You can also use a presentation remote to pause and stop
+          the timer.
         </li>
         <li class="question">Is ZNC accurate?</li>
         <li>Of course not. Please do not use it as a measuring device.</li>
-        <li class="question">What are the numbers in the Sensibility slider?</li>
+        <li class="question">
+          What are the numbers in the Sensibility slider?
+        </li>
         <li>
           The numbers in the Sensibility slider means nothing. They are just
           there so that you can remember the settings you like. Anyway, ZNC will
@@ -49,11 +50,6 @@
         <li>
           ZNC uses a running median filter to discard short but loud noises. You
           can adjust that filter in the config screen.
-        </li>
-        <li class="question">Is ZNC going to present some kind of information when the time is up?</li>
-        <li>
-          Yes, it is going to show statistical information in the near future,
-          if you want it to.
         </li>
         <li class="question">Is ZNC completely free?</li>
         <li>
@@ -72,16 +68,21 @@
           <a
             href="https://chrome.google.com/webstore/detail/zero-noise-classroom/pgpkohbgbjmihckldcacljomfkkaogjd?utm_source=chrome-app-launcher-info-dialog"
             target="_blank"
-          >old ZNC version</a>?
+            >old ZNC version</a
+          >?
         </li>
         <li>
           Yes, you can. But it was designed for Chromebooks only and it will not
           be updated in the future.
         </li>
-        <li class="question">May I report a bug or suggest a new functionality?</li>
+        <li class="question">
+          May I report a bug or suggest a new functionality?
+        </li>
         <li>
           Of course. You can do it in the
-          <router-link to="https://github.com/kpaces/ZNC/issues">issues page</router-link>.
+          <router-link to="https://github.com/kpaces/ZNC/issues"
+            >issues page</router-link
+          >.
         </li>
       </ul>
     </Cover>

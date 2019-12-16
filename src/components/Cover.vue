@@ -1,6 +1,12 @@
 <template>
   <div id="cover">
-    <a @click="close()" title="C l o s e" id="close" class="linkButton material-icons">close</a>
+    <a
+      @click="close()"
+      title="C l o s e"
+      id="close"
+      class="linkButton material-icons"
+      >close</a
+    >
     <div id="content">
       <slot></slot>
     </div>
