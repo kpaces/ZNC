@@ -1,23 +1,39 @@
 <template>
   <div id="cover">
-    <router-link
-      title="C l o s e"
-      id="close"
-      class="linkButton material-icons"
-      to="/"
-      >close</router-link
-    >
-    <slot></slot>
+    <a @click="close()" title="C l o s e" id="close" class="linkButton material-icons">close</a>
+    <div id="content">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import hotkeys from "hotkeys-js";
 
 @Component({
   name: "Cover"
 })
-export default class Cover extends Vue {}
+export default class Cover extends Vue {
+  mounted() {
+    hotkeys("esc", ev => {
+      ev.preventDefault();
+      this.close();
+      return false;
+    });
+  }
+
+  close() {
+    hotkeys.unbind("esc");
+    setTimeout(() => {
+      const timeset = document.getElementById("timeset");
+      if (timeset !== null) {
+        timeset.focus();
+      }
+    }, 150);
+    this.$router.push("/").catch(err => {});
+  }
+}
 </script>
 
 <style scoped lang="stylus">
@@ -31,10 +47,18 @@ export default class Cover extends Vue {}
   z-index 10
   backdrop-filter blur(11px)
   -webkit-backdrop-filter blur(11px)
-  padding 3rem
-  overflow-y scroll
+  overflow hidden
+
+#content
+  margin-top 1em
+  border-top 1px solid rgba(0, 0, 0, 0.025)
+  padding 0 3em 3em 3em
+  width 100%
+  height calc(100% - 6em)
+  overflow-y auto
 
 #close
+  margin-top 3rem
   font-size 2rem
   color #606060
   opacity 0.15

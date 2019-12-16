@@ -96,18 +96,26 @@
           <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>
         </li>
         <li style="margin-top:1em">
-          <a href="https://wangchujiang.com/hotkeys/" target="_blank">Hotkeys-js</a><span class="sep">|</span>
-          <a href="https://github.com/mikolalysenko/moving-median" target="_blank">Moving-median</a><span class="sep">|</span>
+          <a href="https://wangchujiang.com/hotkeys/" target="_blank">Hotkeys-js</a>
+          <span class="sep">|</span>
+          <a href="https://github.com/mikolalysenko/moving-median" target="_blank">Moving-median</a>
+          <span class="sep">|</span>
           <a
             href="https://github.com/NightCatSama/vue-slider-component"
             target="_blank"
-          >Vue-slider-component</a><span class="sep">|</span>
+          >Vue-slider-component</a>
+          <span class="sep">|</span>
           <a href="https://vuejs.org/" target="_blank">Vue</a>
         </li>
       </ul>
 
       <h3>Thanks to</h3>
-      <p>Elissa Clair<span class="sep">|</span>Jack Gómez Robisco<span class="sep">|</span>My always patient family<span class="sep">|</span>My students</p>
+      <p>
+        Elissa Clair
+        <span class="sep">|</span>Jack Gómez Robisco
+        <span class="sep">|</span>My always patient family
+        <span class="sep">|</span>My students
+      </p>
 
       <h3>Contact</h3>
       <a href="mailto:manuel.llorens@kpaces.com" target="_blank">Manuel Llorens</a>

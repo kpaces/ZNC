@@ -18,8 +18,7 @@
                 @click="changeMode(0)"
                 :type="mode === 0 ? 'is-success' : ''"
                 rounded
-                >{{ mode === 0 ? "SELECTED" : "SELECT" }}</b-button
-              >
+              >{{ mode === 0 ? "SELECTED" : "SELECT" }}</b-button>
             </div>
           </nav>
         </div>
@@ -33,8 +32,7 @@
                 @click="changeMode(1)"
                 :type="mode === 1 ? 'is-success' : ''"
                 rounded
-                >{{ mode === 1 ? "SELECTED" : "SELECT" }}</b-button
-              >
+              >{{ mode === 1 ? "SELECTED" : "SELECT" }}</b-button>
             </div>
           </nav>
         </div>
@@ -60,8 +58,7 @@
                 @click="changeMode(2)"
                 :type="mode === 2 ? 'is-success' : ''"
                 rounded
-                >{{ mode === 2 ? "SELECTED" : "SELECT" }}</b-button
-              >
+              >{{ mode === 2 ? "SELECTED" : "SELECT" }}</b-button>
             </div>
           </nav>
         </div>
@@ -87,8 +84,7 @@
                 @click="changeMode(3)"
                 :type="mode === 3 ? 'is-success' : ''"
                 rounded
-                >{{ mode === 3 ? "SELECTED" : "SELECT" }}</b-button
-              >
+              >{{ mode === 3 ? "SELECTED" : "SELECT" }}</b-button>
             </div>
           </nav>
         </div>
@@ -109,8 +105,7 @@
                 @click="changeNoise(0)"
                 :type="noise === 0 ? 'is-success' : ''"
                 rounded
-                >{{ noise === 0 ? "SELECTED" : "SELECT" }}</b-button
-              >
+              >{{ noise === 0 ? "SELECTED" : "SELECT" }}</b-button>
             </div>
           </nav>
         </div>
@@ -124,8 +119,7 @@
                 @click="changeNoise(1)"
                 :type="noise === 1 ? 'is-success' : ''"
                 rounded
-                >{{ noise === 1 ? "SELECTED" : "SELECT" }}</b-button
-              >
+              >{{ noise === 1 ? "SELECTED" : "SELECT" }}</b-button>
             </div>
           </nav>
         </div>
@@ -139,8 +133,7 @@
                 @click="changeNoise(2)"
                 :type="noise === 2 ? 'is-success' : ''"
                 rounded
-                >{{ noise === 2 ? "SELECTED" : "SELECT" }}</b-button
-              >
+              >{{ noise === 2 ? "SELECTED" : "SELECT" }}</b-button>
             </div>
           </nav>
         </div>

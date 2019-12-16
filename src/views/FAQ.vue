@@ -33,9 +33,9 @@
         </li>
         <li class="question">Can I control ZNC with the keyboard?</li>
         <li>
-          Yes, you can pause and resume with the spacebar and stop it with the
-          ESC key. In the future I plan to add more keys so that you control it
-          with a presentation remote.
+          Yes, you can pause and resume with the SPACEBAR and stop it with the
+          ENTER key. In the future I plan to add more keys so that you control
+          it with a presentation remote.
         </li>
         <li class="question">Is ZNC accurate?</li>
         <li>Of course not. Please do not use it as a measuring device.</li>

@@ -59,7 +59,6 @@
 
 <script lang="ts">
 import { Component, Watch, Prop, Vue } from "vue-property-decorator";
-import { mapState } from "vuex";
 
 import VueSlider from "vue-slider-component";
 import hotkeys from "hotkeys-js";
@@ -134,7 +133,7 @@ export default class Timer extends Vue {
   }
 
   created() {
-    hotkeys("esc", ev => {
+    hotkeys("enter", ev => {
       ev.preventDefault();
       if (this.status > 0) {
         this.stop();
@@ -217,9 +216,15 @@ export default class Timer extends Vue {
   }
 
   play() {
+    this.$router.push("/").catch(err => {});
+
     this.seconds = this.timeLimit * 60;
     this.stats = [0, 0, 0];
     this.timeStats = [];
+    this.$store.commit("setStats", {
+      stats: this.stats,
+      timeStats: this.timeStats
+    });
 
     const n: any = navigator;
     n.getUserMedia =
@@ -287,10 +292,15 @@ export default class Timer extends Vue {
     this.preRed = false;
     this.inRed = false;
 
-    setTimeout(() => {
-      (this.$refs.timeset as HTMLInputElement).focus();
-    }, 150);
+    this.$store.commit("setStats", {
+      stats: this.stats,
+      timeStats: this.timeStats
+    });
+
     document.title = "ZNC";
+
+    // Add conditional push
+    this.$router.push("/report").catch(err => {});
   }
 
   tick() {
@@ -536,7 +546,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
 
     if (h < t) {
       // GREEN state
-      this.canvasContext.fillStyle = `rgba(128,255,128,.65)`;
+      this.canvasContext.fillStyle = "rgba(128,255,128,.65)";
       if (this.status === 1) {
         this.stats[0] += 1;
       }
@@ -545,7 +555,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
       }
     } else if (h >= t && h < 2 * t) {
       // YELLOW state
-      this.canvasContext.fillStyle = `rgba(255,192,80,.65)`;
+      this.canvasContext.fillStyle = "rgba(255,192,80,.65)";
       if (this.status === 1) {
         this.stats[1] += 1;
       }
@@ -554,7 +564,7 @@ Access the clipping through node.checkClipping(); use node.shutdown to get rid o
       }
     } else {
       // RED state
-      this.canvasContext.fillStyle = `rgba(255,100,100,.65)`;
+      this.canvasContext.fillStyle = "rgba(255,100,100,.65)";
       if (this.status === 1) {
         this.stats[2] += 1;
       }
