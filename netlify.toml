@@ -10,7 +10,7 @@ Feature-Policy = "fullscreen 'self'"
 [[headers]]
 for = "/index.html"
 [headers.values]
-Cache-Control = "public, max-age=86400"
+Cache-Control = "no-cache"
 [[headers]]
 for = "/img/*"
 [headers.values]
