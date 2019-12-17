@@ -7,7 +7,10 @@
       </svg>
       <div id="pie-legend">
         <div class="legend" v-for="(percent, i) in percentages" :key="i">
-          <div class="legend-item" :style="`background-color:${fills[i]}`"></div>
+          <div
+            class="legend-item"
+            :style="`background-color:${fills[i]}`"
+          ></div>
           {{ Math.round(percent * 100.0) }} %
         </div>
       </div>

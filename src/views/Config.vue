@@ -18,7 +18,8 @@
                 @click="changeMode(0)"
                 :type="mode === 0 ? 'is-success' : ''"
                 rounded
-              >{{ mode === 0 ? "SELECTED" : "SELECT" }}</b-button>
+                >{{ mode === 0 ? "SELECTED" : "SELECT" }}</b-button
+              >
             </div>
           </nav>
         </div>
@@ -32,7 +33,8 @@
                 @click="changeMode(1)"
                 :type="mode === 1 ? 'is-success' : ''"
                 rounded
-              >{{ mode === 1 ? "SELECTED" : "SELECT" }}</b-button>
+                >{{ mode === 1 ? "SELECTED" : "SELECT" }}</b-button
+              >
             </div>
           </nav>
         </div>
@@ -58,7 +60,8 @@
                 @click="changeMode(2)"
                 :type="mode === 2 ? 'is-success' : ''"
                 rounded
-              >{{ mode === 2 ? "SELECTED" : "SELECT" }}</b-button>
+                >{{ mode === 2 ? "SELECTED" : "SELECT" }}</b-button
+              >
             </div>
           </nav>
         </div>
@@ -84,7 +87,8 @@
                 @click="changeMode(3)"
                 :type="mode === 3 ? 'is-success' : ''"
                 rounded
-              >{{ mode === 3 ? "SELECTED" : "SELECT" }}</b-button>
+                >{{ mode === 3 ? "SELECTED" : "SELECT" }}</b-button
+              >
             </div>
           </nav>
         </div>
@@ -105,7 +109,8 @@
                 @click="changeNoise(0)"
                 :type="noise === 0 ? 'is-success' : ''"
                 rounded
-              >{{ noise === 0 ? "SELECTED" : "SELECT" }}</b-button>
+                >{{ noise === 0 ? "SELECTED" : "SELECT" }}</b-button
+              >
             </div>
           </nav>
         </div>
@@ -119,7 +124,8 @@
                 @click="changeNoise(1)"
                 :type="noise === 1 ? 'is-success' : ''"
                 rounded
-              >{{ noise === 1 ? "SELECTED" : "SELECT" }}</b-button>
+                >{{ noise === 1 ? "SELECTED" : "SELECT" }}</b-button
+              >
             </div>
           </nav>
         </div>
@@ -133,7 +139,8 @@
                 @click="changeNoise(2)"
                 :type="noise === 2 ? 'is-success' : ''"
                 rounded
-              >{{ noise === 2 ? "SELECTED" : "SELECT" }}</b-button>
+                >{{ noise === 2 ? "SELECTED" : "SELECT" }}</b-button
+              >
             </div>
           </nav>
         </div>
@@ -150,7 +157,8 @@
                   @input="changeOtherSettings"
                   v-model="otherSettings.report"
                   type="is-success"
-                >{{ otherSettings.report ? "Yes" : "No" }}</b-switch>
+                  >{{ otherSettings.report ? "Yes" : "No" }}</b-switch
+                >
               </div>
             </div>
           </nav>
@@ -165,7 +173,8 @@
                   @input="changeOtherSettings"
                   v-model="otherSettings.sounds"
                   type="is-success"
-                >{{ otherSettings.sounds ? "Yes" : "No" }}</b-switch>
+                  >{{ otherSettings.sounds ? "Yes" : "No" }}</b-switch
+                >
               </div>
             </div>
           </nav>
@@ -198,9 +207,12 @@
                   @input="changeOtherSettings"
                   v-model="otherSettings.webhook"
                   type="is-success"
-                >{{ otherSettings.webhook ? "Yes" : "No" }}</b-switch>
+                  >{{ otherSettings.webhook ? "Yes" : "No" }}</b-switch
+                >
 
-                <b-switch v-else disabled :value="false" type="is-success">No</b-switch>
+                <b-switch v-else disabled :value="false" type="is-success"
+                  >No</b-switch
+                >
               </div>
             </div>
           </nav>
