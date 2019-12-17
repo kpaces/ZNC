@@ -39,21 +39,10 @@
         </div>
       </div>
 
-      <div
-        id="time"
-        :class="{ blinking: status > 1 }"
-        key="time"
-        v-if="micEnabled"
-        v-html="time"
-      ></div>
+      <div id="time" :class="{ blinking: status > 1 }" key="time" v-if="micEnabled" v-html="time"></div>
     </transition-group>
 
-    <canvas
-      :width="resolution"
-      height="1080"
-      ref="display"
-      id="display"
-    ></canvas>
+    <canvas :width="resolution" height="1080" ref="display" id="display"></canvas>
 
     <vue-slider
       title="S e n s i t i v i t y"
@@ -143,6 +132,10 @@ export default class Timer extends Vue {
     return this.$store.state.timeStep;
   }
 
+  get otherSettings() {
+    return this.$store.state.otherSettings;
+  }
+
   created() {
     hotkeys("enter", ev => {
       ev.preventDefault();
@@ -195,6 +188,11 @@ export default class Timer extends Vue {
     const savedTimeStep: any = localStorage.getItem("ZNC-timeStep");
     if (savedTimeStep !== null) {
       this.$store.commit("setTimeStep", parseInt(savedTimeStep, 10));
+    }
+
+    const savedOtherSettings: any = localStorage.getItem("ZNC-otherSettings");
+    if (savedOtherSettings !== null) {
+      this.$store.commit("setOtherSettings", JSON.parse(savedOtherSettings));
     }
   }
 
@@ -325,14 +323,25 @@ export default class Timer extends Vue {
     document.title = "ZNC";
 
     // Add conditional push
-    this.$router.push("/report").catch(err => {});
+    if (this.otherSettings.report) {
+      this.$router.push("/report").catch(err => {});
+    } else {
+      setTimeout(() => {
+        const timeset = document.getElementById("timeset");
+        if (timeset !== null) {
+          timeset.focus();
+        }
+      }, 150);
+    }
   }
 
   tick() {
     this.seconds -= 1;
     if (this.seconds < 0) {
-      const audio = new Audio("/mp3/chime.mp3");
-      audio.play();
+      if (this.otherSettings.sounds) {
+        const audio = new Audio("/mp3/chime.mp3");
+        audio.play();
+      }
       this.stop();
       return;
     }
@@ -348,8 +357,10 @@ export default class Timer extends Vue {
       return;
     }
 
-    const audio = new Audio("/mp3/bip.mp3");
-    audio.play();
+    if (this.otherSettings.sounds) {
+      const audio = new Audio("/mp3/bip.mp3");
+      audio.play();
+    }
 
     switch (this.mode) {
       case 0:
@@ -384,8 +395,10 @@ export default class Timer extends Vue {
     if (this.isRed) {
       this.isRed = false;
       this.pause();
-      const audio = new Audio("/mp3/bip2.mp3");
-      audio.play();
+      if (this.otherSettings.sounds) {
+        const audio = new Audio("/mp3/bip2.mp3");
+        audio.play();
+      }
     }
   }
 

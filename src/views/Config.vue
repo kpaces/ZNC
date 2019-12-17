@@ -3,7 +3,7 @@
     <Cover>
       <h2>Config</h2>
 
-      <h3>When the meter hits red</h3>
+      <h3>What to do when the meter hits red</h3>
       <p>
         Select what ZND should do when the meter hits red (for more than 1.5
         seconds)
@@ -47,7 +47,7 @@
                 max="60"
                 maxlength="2"
                 type="tel"
-                class="input"
+                class="numberInput"
                 v-model="step"
                 @blur="fixStep"
               />
@@ -73,7 +73,7 @@
                 max="60"
                 maxlength="2"
                 type="tel"
-                class="input"
+                class="numberInput"
                 v-model="step"
                 @blur="fixStep"
               />
@@ -90,7 +90,7 @@
         </div>
       </div>
 
-      <h3>Noise filter</h3>
+      <h3>Noise filter intensity</h3>
       <p>
         The noise filter discards short noises, like a dropped pencil, and makes
         the meter more stable
@@ -139,10 +139,73 @@
         </div>
       </div>
 
-      <h3>Final stats</h3>
-      <p>Coming soon</p>
-      <h3>Sounds</h3>
-      <p>Coming soon</p>
+      <h3>Other settings</h3>
+      <div class="columns">
+        <div class="column">
+          <nav class="panel box">
+            <div class="panel-block">Show final stats</div>
+            <div class="panel-block">
+              <div class="field">
+                <b-switch
+                  @input="changeOtherSettings"
+                  v-model="otherSettings.report"
+                  type="is-success"
+                >{{ otherSettings.report ? "Yes" : "No" }}</b-switch>
+              </div>
+            </div>
+          </nav>
+        </div>
+
+        <div class="column">
+          <nav class="panel box">
+            <div class="panel-block">Play sounds</div>
+            <div class="panel-block">
+              <div class="field">
+                <b-switch
+                  @input="changeOtherSettings"
+                  v-model="otherSettings.sounds"
+                  type="is-success"
+                >{{ otherSettings.sounds ? "Yes" : "No" }}</b-switch>
+              </div>
+            </div>
+          </nav>
+        </div>
+
+        <div class="column">
+          <nav class="panel box disabled">
+            <div class="panel-block">Webhook</div>
+
+            <div class="panel-block">
+              <b-input
+                disabled
+                @input="changeOtherSettings"
+                v-model="otherSettings.webhookURL"
+                placeholder="Paste the webhook URL here"
+                rounded
+                expanded
+                class="textInput"
+                :class="{
+                  valid: isWebhookURLValid === 1,
+                  unvalid: isWebhookURLValid === 2
+                }"
+              ></b-input>
+            </div>
+
+            <div class="panel-block">
+              <div class="field">
+                <b-switch
+                  v-if="isWebhookURLValid === 1"
+                  @input="changeOtherSettings"
+                  v-model="otherSettings.webhook"
+                  type="is-success"
+                >{{ otherSettings.webhook ? "Yes" : "No" }}</b-switch>
+
+                <b-switch v-else disabled :value="false" type="is-success">No</b-switch>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
     </Cover>
   </div>
 </template>
@@ -159,15 +222,39 @@ export default {
 
   data() {
     return {
-      step: 5
+      step: 5,
+      otherSettings: {
+        report: true,
+        sounds: true,
+        webhook: false,
+        webhookURL: ""
+      }
     };
   },
 
-  computed: mapState({
-    mode: "mode",
-    noise: "noise",
-    timeStep: "timeStep"
-  }),
+  computed: {
+    isWebhookURLValid() {
+      // Regex for URL validation from https://www.regextester.com/94502
+      if (this.otherSettings.webhookURL.trim().length === 0) {
+        return 0;
+      }
+      if (
+        /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w-._~:/?#[\]@!$&'()*+,;=.]+$/.test(
+          this.otherSettings.webhookURL.trim()
+        )
+      ) {
+        return 1;
+      }
+      return 2;
+    },
+
+    ...mapState({
+      mode: "mode",
+      noise: "noise",
+      timeStep: "timeStep",
+      other: "otherSettings"
+    })
+  },
 
   watch: {
     step: function(val) {
@@ -186,6 +273,7 @@ export default {
 
   mounted() {
     this.step = this.timeStep;
+    this.otherSettings = this.other;
   },
 
   methods: {
@@ -201,6 +289,14 @@ export default {
     changeNoise(noise) {
       this.$store.commit("setNoise", noise);
       localStorage.setItem("ZNC-noiseFilter", noise.toString());
+    },
+
+    changeOtherSettings() {
+      this.$store.commit("setOtherSettings", this.otherSettings);
+      localStorage.setItem(
+        "ZNC-otherSettings",
+        JSON.stringify(this.otherSettings)
+      );
     }
   }
 };
@@ -239,17 +335,17 @@ nav.disabled *
   transition all 0.15s ease-in-out !important
   cursor default !important
 
-.input
+.numberInput
   font-family 'Share Tech Mono'
   letter-spacing -0.1em
   display block
-  font-size 4vmin
-  line-height 0vmin
+  font-size 2em
+  line-height 0
   text-align center
   border 1px solid #dbdbdb !important
-  padding 0.6vmin 1vmin 0.4vmin 0.8vmin
-  width 6vmin !important
-  height 6vmin !important
+  padding 0.3em 0.5em 0.2em 0.4em
+  width 2em !important
+  height 2em !important
   border-radius 50%
   background rgba(255, 255, 255, 0.65) !important
   color #606060
@@ -257,4 +353,23 @@ nav.disabled *
   box-shadow none !important
   outline 0 none !important
   -webkit-appearance none !important
+
+.textInput input
+  font-family 'Share Tech Mono'
+  font-size 1em
+  text-align center
+  border 1px solid #dbdbdb !important
+  padding 0.3em 0.5em 0.2em 0.4em
+  background rgba(255, 255, 255, 0.65) !important
+  color #606060
+  -webkit-box-shadow none !important
+  box-shadow none !important
+  outline 0 none !important
+  -webkit-appearance none !important
+
+.valid input
+  background-color rgba(128, 255, 128, 0.25) !important
+
+.unvalid input
+  background-color rgba(255, 100, 100, 0.25) !important
 </style>

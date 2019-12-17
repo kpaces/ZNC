@@ -12,9 +12,10 @@
         <li>
           No. ZNC only runs on your browser and doesn't record anything. You can
           explore the
-          <a href="https://github.com/kpaces/ZNC" target="_blank"
-            >source code</a
-          >
+          <a
+            href="https://github.com/kpaces/ZNC"
+            target="_blank"
+          >source code</a>
           yourself.
         </li>
         <li class="question">
@@ -30,6 +31,11 @@
           It waits for one and a half seconds of continous red and then
           automatically does what you chooses in the config screen.
         </li>
+        <li class="question">What is the webhook setting for?</li>
+        <li>
+          If you use services like IFTTT or Zapier, you can tell ZNC to trigger
+          your own actions when the time is up. Contact me if you need support.
+        </li>
         <li class="question">Can I control ZNC with the keyboard?</li>
         <li>
           Yes, you can pause and resume with the SPACEBAR and stop it with the
@@ -38,9 +44,7 @@
         </li>
         <li class="question">Is ZNC accurate?</li>
         <li>Of course not. Please do not use it as a measuring device.</li>
-        <li class="question">
-          What are the numbers in the Sensibility slider?
-        </li>
+        <li class="question">What does the numbers in the Sensibility slider mean?</li>
         <li>
           The numbers in the Sensibility slider means nothing. They are just
           there so that you can remember the settings you like. Anyway, ZNC will
@@ -68,21 +72,16 @@
           <a
             href="https://chrome.google.com/webstore/detail/zero-noise-classroom/pgpkohbgbjmihckldcacljomfkkaogjd?utm_source=chrome-app-launcher-info-dialog"
             target="_blank"
-            >old ZNC version</a
-          >?
+          >old ZNC version</a>?
         </li>
         <li>
           Yes, you can. But it was designed for Chromebooks only and it will not
           be updated in the future.
         </li>
-        <li class="question">
-          May I report a bug or suggest a new functionality?
-        </li>
+        <li class="question">May I report a bug or suggest a new functionality?</li>
         <li>
           Of course. You can do it in the
-          <router-link to="https://github.com/kpaces/ZNC/issues"
-            >issues page</router-link
-          >.
+          <router-link to="https://github.com/kpaces/ZNC/issues">issues page</router-link>.
         </li>
       </ul>
     </Cover>

@@ -8,7 +8,13 @@ export default new Vuex.Store({
     mode: 1,
     noise: 1,
     timeStep: 5,
-    stats: { stats: [], timeStats: [] }
+    stats: { stats: [], timeStats: [] },
+    otherSettings: {
+      report: true,
+      sounds: true,
+      webhook: false,
+      webhookURL: ""
+    }
   },
   mutations: {
     setMode(state, mode) {
@@ -25,6 +31,10 @@ export default new Vuex.Store({
 
     setStats(state, stats) {
       state.stats = stats;
+    },
+
+    setOtherSettings(state, settings) {
+      state.otherSettings = settings;
     }
   },
   actions: {},
