@@ -104,6 +104,7 @@ export default {
 .legend
   display flex
   align-items center
+  white-space nowrap
 
 .legend-item
   width 2em
