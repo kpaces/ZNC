@@ -30,9 +30,9 @@
           It waits for one and a half seconds of continous red and then
           automatically does what you chooses in the config screen.
         </li>
-        <li class="question">What is the webhook setting for?</li>
+        <li class="question">What will the webhook setting be for?</li>
         <li>
-          If you use services like IFTTT or Zapier, you can tell ZNC to trigger
+          If you use services like IFTTT or Zapier, you will tell ZNC to trigger
           your own actions when the time is up. Contact me if you need support.
         </li>
         <li class="question">Can I control ZNC with the keyboard?</li>
@@ -59,7 +59,7 @@
         <li class="question">Is ZNC completely free?</li>
         <li>
           Yes, it is, and will always be. But you may consider a
-          <router-link to="/about">donation</router-link>in order to help me
+          <router-link to="/about">donation</router-link> in order to help me
           maintain it.
         </li>
         <li class="question">Does ZNC runs in any browser?</li>

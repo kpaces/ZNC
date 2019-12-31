@@ -12,7 +12,7 @@
         ZNC is a free and
         <a href="https://github.com/kpaces/ZNC" target="_blank">open-source</a>
         tool developed by
-        <a href="https://kpaces.com" target="_blank">kpaces</a> for the
+        <a href="https://kpaces.com" target="_blank">kpaces</a> for the incoming
         <a href="https://zeronoiseclassroom.com" target="_blank"
           >Zero Noise Classroom</a
         >
@@ -187,7 +187,7 @@ export default {
 <style scoped lang="stylus">
 #kpaces
   margin 1em 0 0.5em 0 !important
-  height 50px
+  height 65px
 
 .sep
   font-weight 200
