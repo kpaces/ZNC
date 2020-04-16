@@ -1,6 +1,6 @@
 {
   "name": "znc",
-  "version": "0.9.9",
+  "version": "1.0.0",
   "license": "cc-by-sa-2.0",
   "scripts": {
     "serve": "vue-cli-service serve",

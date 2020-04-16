@@ -5,7 +5,7 @@
 
       <p>
         <a href="https://github.com/kpaces/ZNC" target="_blank">
-          <img id="kpaces" src="https://kpaces.com/img/kpaces.svg" />
+          <img id="kpaces" src="https://res.cloudinary.com/kpaces/image/upload/v1585214409/CDN/img/kpaces-h.svg" />
         </a>
       </p>
       <p>
