@@ -5,7 +5,7 @@
 
       <h3>What to do when the meter hits red</h3>
       <p>
-        Select what ZND should do when the meter hits red (for more than 1.5
+        Select what ZNC should do when the meter hits red (for more than 1.5
         seconds)
       </p>
       <div class="columns">
